@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1770136873420,
-      "tag": "0000_abandoned_oracle",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1770138194702,
-      "tag": "0001_lumpy_malice",
+      "when": 1772122678173,
+      "tag": "0000_acoustic_lady_mastermind",
       "breakpoints": true
     }
   ]

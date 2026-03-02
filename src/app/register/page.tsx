@@ -6,21 +6,22 @@ export default function RegisterPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleRegister = async () => {
-    const res = await fetch("/api/auth/sign-up", {
-        method: "POST",
-        headers: {
-            "content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-    });
+  const handleRegister = async () => {
+  const res = await fetch("/api/auth/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
 
-    if (res.ok) {
-        window.location.href = "/";
-    } else {
-        alert("Registration failed");
-    }
+  if (res.ok) {
+    window.location.href = "/";
+  } else {
+    alert("Registration failed");
+  }
 };
+
 
 return (
     <div>
@@ -33,7 +34,7 @@ return (
         placeholder="password"
         onChange={(e) => setPassword(e.target.value)}
          />
-         <button onClick={handleRegister}></button>
+         <button onClick={handleRegister}>Register</button>
     </div>
 )
 }

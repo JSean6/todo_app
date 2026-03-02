@@ -19,11 +19,11 @@ export default function Home() {
   const [completed, setCompleted] = useState(false);
 
 
-  useEffect(() => {
-    fetch("/api/tasks")
-      .then((res) => res.json())
-      .then((data) => setTodos(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch("/api/tasks")
+  //     .then((res) => res.json())
+  //     .then((data) => setTodos(data));
+  // }, []);
 
   const handleAdd = async () => {
     if (!title) return;
