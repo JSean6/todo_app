@@ -5,4 +5,5 @@ export default function Dashboard() {
     <div>
         <Logout />
     </div>
-)}
+);
+}
