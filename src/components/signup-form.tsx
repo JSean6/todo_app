@@ -27,7 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { signIn } from "../../server/users"
+import { signUp } from "../../server/users"
 import { z } from "zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -36,11 +36,12 @@ import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
+  username: z.string().min(3),
   email: z.string().email(),
   password: z.string().min(8),
 });
 
-export function LoginForm({
+export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -49,6 +50,7 @@ export function LoginForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
     },
@@ -62,9 +64,13 @@ export function LoginForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const { success, message } = await signIn(values.email, values.password)
+    const { success, message } = await signUp(
+      values.email, 
+      values.password,
+      values.username
+    )
     if (success){
-      toast.success(message as string);
+      toast.success(`${message as string} Check email for verification`);
       router.push("/dashboard");
     } else {
       toast.error(message as string);
@@ -75,9 +81,9 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle className="text-xl">Welcome</CardTitle>
           <CardDescription>
-            Login with your Google account
+            Sign Up with your Google account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -94,12 +100,26 @@ export function LoginForm({
                         fill="currentColor"
                       />
                     </svg>
-                    Login with Google
+                    Signup with Google
                   </Button>
                 </Field>
                 <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                   Or continue with
                 </FieldSeparator>
+                <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Username</FormLabel>
+                        <FormControl>
+                            <Input placeholder="username" {...field}/>
+                        </FormControl>
+                    </FormItem>
+                )}
+                
+                    
+                />
                 <FormField
                   control={form.control}
                   name="email"
@@ -142,11 +162,11 @@ export function LoginForm({
                     {isLoading ? (
                       <Loader2 className="size-4 animate-spin "/>
                     ) : (
-                      "Login"
+                      "Sign Up"
                     )}
                   </Button>
                   <FieldDescription className="text-center">
-                    Don&apos;t have an account? <a href="/signup">Sign up</a>
+                    Already have an account? <a href="/login">Login</a>
                   </FieldDescription>
                 </Field>
               </FieldGroup>
