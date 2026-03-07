@@ -27,7 +27,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { signUp } from "../../server/users"
 import { z } from "zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -64,16 +63,17 @@ export function SignupForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const { success, message } = await signUp(
-      values.email, 
-      values.password,
-      values.username
-    )
-    if (success){
-      toast.success(`${message as string} Check email for verification`);
+    const { data, error } = await authClient.signUp.email({
+      email: values.email,
+      password: values.password,
+      name: values.username,
+      callbackURL: "/dashboard",
+    })
+    if (data){
+      toast.success("Signed up successfully");
       router.push("/dashboard");
     } else {
-      toast.error(message as string);
+      toast.error(error?.message as string);
     }
     setIsLoading(false);
   }
