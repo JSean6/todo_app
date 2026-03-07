@@ -79,56 +79,6 @@ export async function PATCH(request: Request) {
   return NextResponse.json(updatedTask[0]);
 }
 
-// export async function DELETE(request: Request) {
-//   const session = await auth.api.getSession({
-//     headers: await headers(),
-//   });
-
-//   if (!session?.user) {
-//     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-//   }
-
-//   const { id } = await request.json();
-
-//   await db.delete(taskTable).where(eq(taskTable.id, id));
-
-//   return NextResponse.json({ message: "Task deleted successfully" });
-// }
-
-// // export async function DELETE(request: Request) {
-
-//   const session = await auth.api.getSession({
-//     headers: await headers(),
-//   });
-
-//   if (!session?.user) {
-//     return NextResponse.json(
-//       { error: "Unauthorized" },
-//       { status: 401 }
-//     );
-//   }
-
-//   // Get the task ID from URL query params
-//   const { searchParams } = new URL(request.url);
-//   const taskId = searchParams.get("id");
-
-//   if (!taskId) {
-//     return NextResponse.json(
-//       { error: "Task ID required" },
-//       { status: 400 }
-//     );
-//   }
-
-//   // Delete task from database
-//   await db
-//     .delete(taskTable)
-//     .where(eq(taskTable.id, taskId));
-
-//   return NextResponse.json({
-//     message: "Task deleted successfully",
-//   });
-// }
-
 export async function DELETE(request: Request) {
   const session = await auth.api.getSession({
     headers: await headers(),
