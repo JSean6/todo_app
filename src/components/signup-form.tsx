@@ -67,11 +67,11 @@ export function SignupForm({
       email: values.email,
       password: values.password,
       name: values.username,
-      callbackURL: "/dashboard",
+      callbackURL: "/login",
     })
     if (data){
       toast.success("Signed up successfully");
-      router.push("/dashboard");
+      router.push("/login");
     } else {
       toast.error(error?.message as string);
     }
