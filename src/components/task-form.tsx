@@ -1,6 +1,5 @@
 "use client";
 
-
 import { Box, TextField, Button, Grid, Checkbox } from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -18,7 +17,6 @@ export default function TaskForm() {
   
   const handleAdd = async () => {
 
-    // Prevent empty titles
     if (!title) return;
 
     try {
