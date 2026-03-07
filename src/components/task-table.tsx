@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
   Table,
   TableBody,
@@ -13,8 +12,6 @@ import {
   IconButton
 } from "@mui/material";
 import { DeleteIcon } from "lucide-react";
-
-
 import { useRouter } from "next/navigation";
 
 
@@ -52,8 +49,12 @@ export default function TaskTable({ tasks }: { tasks: Task[] }) {
  
   const deleteTask = async (taskId: string) => {
 
-    await fetch(`/api/tasks?id=${taskId}`, {
-      method: "DELETE"
+    await fetch("/api/tasks", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ id: taskId })
     });
 
     router.refresh();

@@ -26,7 +26,6 @@ export async function GET() {
   return NextResponse.json(tasks);
 }
 
-
 export async function POST(request: Request) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -47,4 +46,108 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json(task);
+}
+
+export async function PATCH(request: Request) {
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  // Get update data from frontend
+  const { id, title, description, completed, dueAt } = await request.json();
+
+  // Update the task in the database
+  const updatedTask = await db
+    .update(taskTable)
+    .set({
+      title,
+      description,
+      completed,
+      dueAt: dueAt ? new Date(dueAt) : null,
+    })
+    .where(eq(taskTable.id, id))
+    .returning();
+
+  return NextResponse.json(updatedTask[0]);
+}
+
+// export async function DELETE(request: Request) {
+//   const session = await auth.api.getSession({
+//     headers: await headers(),
+//   });
+
+//   if (!session?.user) {
+//     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+//   }
+
+//   const { id } = await request.json();
+
+//   await db.delete(taskTable).where(eq(taskTable.id, id));
+
+//   return NextResponse.json({ message: "Task deleted successfully" });
+// }
+
+// // export async function DELETE(request: Request) {
+
+//   const session = await auth.api.getSession({
+//     headers: await headers(),
+//   });
+
+//   if (!session?.user) {
+//     return NextResponse.json(
+//       { error: "Unauthorized" },
+//       { status: 401 }
+//     );
+//   }
+
+//   // Get the task ID from URL query params
+//   const { searchParams } = new URL(request.url);
+//   const taskId = searchParams.get("id");
+
+//   if (!taskId) {
+//     return NextResponse.json(
+//       { error: "Task ID required" },
+//       { status: 400 }
+//     );
+//   }
+
+//   // Delete task from database
+//   await db
+//     .delete(taskTable)
+//     .where(eq(taskTable.id, taskId));
+
+//   return NextResponse.json({
+//     message: "Task deleted successfully",
+//   });
+// }
+
+export async function DELETE(request: Request) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await request.json();
+
+  if (!id) {
+    return NextResponse.json(
+      { error: "Task ID required" },
+      { status: 400 }
+    );
+  }
+
+  await db.delete(taskTable).where(eq(taskTable.id, id));
+
+  return NextResponse.json({ message: "Task deleted successfully" });
 }
