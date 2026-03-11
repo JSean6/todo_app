@@ -15,6 +15,13 @@
       "when": 1772661657129,
       "tag": "0001_tiresome_hammerhead",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772904253484,
+      "tag": "0002_glorious_wolfpack",
+      "breakpoints": true
     }
   ]
 }

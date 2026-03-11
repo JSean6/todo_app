@@ -57,6 +57,23 @@ export const account = pgTable(
   (table) => [index("account_userId_idx").on(table.userId)],
 );
 
+export const category = pgTable(
+  "category",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [index("category_userId_idx").on(table.userId)]
+);
+
 export const verification = pgTable(
   "verification",
   {
@@ -90,6 +107,10 @@ export const task = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
 
+    categoryId: text("category_id").references(() => category.id, {
+      onDelete: "set null",
+    }),
+
     createdAt: timestamp("created_at").defaultNow().notNull(),
 
     updatedAt: timestamp("updated_at")
@@ -99,6 +120,8 @@ export const task = pgTable(
   },
   (table) => [
     index("task_userId_idx").on(table.userId),
+    index("task_categoryId_idx").on(table.categoryId),
+    index("task_dueAt_idx").on(table.dueAt),
   ]
 );
 
@@ -106,6 +129,8 @@ export const task = pgTable(
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
+  categories: many(category),
+  tasks: many(task),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -121,11 +146,23 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [user.id],
   }),
 }));
+export const categoryRelations = relations(category, ({ one, many }) => ({
+  user: one(user, {
+    fields: [category.userId],
+    references: [user.id],
+  }),
+  tasks: many(task),
+}));
+
 export const taskRelations = relations(task, ({ one }) => ({
   user: one(user, {
     fields: [task.userId],
     references: [user.id],
   }),
+  category: one(category, {
+    fields: [task.categoryId],
+    references: [category.id],
+  }),
 }));
 
-export const schema = { user, session, account, verification, task };
+export const schema = { user, session, account, verification, category, task };

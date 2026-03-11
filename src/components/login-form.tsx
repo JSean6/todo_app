@@ -27,7 +27,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { signIn } from "../../server/users"
 import { z } from "zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -62,12 +61,16 @@ export function LoginForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const { success, message } = await signIn(values.email, values.password)
-    if (success){
-      toast.success(message as string);
+    const { data, error } = await authClient.signIn.email({
+      email: values.email,
+      password: values.password,
+      callbackURL: "/dashboard",
+    })
+    if (data){
+      toast.success("Logged in successfully");
       router.push("/dashboard");
     } else {
-      toast.error(message as string);
+      toast.error(error?.message as string);
     }
     setIsLoading(false);
   }
@@ -160,8 +163,5 @@ export function LoginForm({
       </FieldDescription>
     </div>
   )
-}
-function userRouter() {
-  throw new Error("Function not implemented.");
 }
 
