@@ -69,6 +69,7 @@ export function SignupForm({
       name: values.username,
       callbackURL: "/login",
     })
+
     if (data){
       toast.success("Signed up successfully");
       router.push("/login");
@@ -77,6 +78,7 @@ export function SignupForm({
     }
     setIsLoading(false);
   }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>

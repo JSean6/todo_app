@@ -1,53 +1,52 @@
 "use client";
 
-import { Box, TextField, Button, Grid, Checkbox } from "@mui/material";
-import { useState } from "react";
+import { Box, TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function TaskForm() {
+export type Category = { id: string; name: string };
 
+type TaskFormProps = {
+  categories?: Category[];
+  defaultDueDate?: string;
+  onSuccess?: () => void;
+};
+
+export default function TaskForm({ categories = [], defaultDueDate = "", onSuccess }: TaskFormProps) {
   const router = useRouter();
 
-  // Form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [dueAt, setDueAt] = useState("");
-  const [completed, setCompleted] = useState(false);
+  const [dueAt, setDueAt] = useState(defaultDueDate);
+  const [categoryId, setCategoryId] = useState<string>("");
 
-  
+  useEffect(() => {
+    setDueAt(defaultDueDate);
+  }, [defaultDueDate]);
+
   const handleAdd = async () => {
-
-    // Prevent empty titles
-    if (!title) return;
+    if (!title.trim()) return;
 
     try {
       const res = await fetch("/api/tasks", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title,
-          description,
+          title: title.trim(),
+          description: description.trim() || null,
           dueAt: dueAt || null,
-          completed
-        })
+          categoryId: categoryId || null,
+        }),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to create task");
-      }
+      if (!res.ok) throw new Error("Failed to create task");
 
-      // Clear form after success
       setTitle("");
       setDescription("");
-      setDueAt("");
-      setCompleted(false);
-
-      // Refresh the page so the dashboard fetches tasks again from the database
+      setDueAt(defaultDueDate || "");
+      setCategoryId("");
+      onSuccess?.();
       router.refresh();
-
     } catch (error) {
       console.error("Error creating task:", error);
     }
@@ -55,8 +54,7 @@ export default function TaskForm() {
 
   return (
     <Box sx={{ marginBottom: 4 }}>
-      <Grid container spacing={2}>
-
+      <Grid container spacing={2} alignItems="center">
         <Grid size={3}>
           <TextField
             label="Title"
@@ -64,45 +62,53 @@ export default function TaskForm() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             fullWidth
+            size="small"
           />
         </Grid>
-
-        <Grid size={3}>
+        <Grid size={2}>
           <TextField
             label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             fullWidth
+            size="small"
           />
         </Grid>
-
         <Grid size={2}>
           <TextField
             type="date"
+            label="Due date"
             value={dueAt}
             onChange={(e) => setDueAt(e.target.value)}
             fullWidth
+            size="small"
+            InputLabelProps={{ shrink: true }}
           />
         </Grid>
-
-        <Grid>
-          <Checkbox
-            checked={completed}
-            onChange={(e) => setCompleted(e.target.checked)}
-          />
-        </Grid>
-
         <Grid size={2}>
-          <Button
-            variant="contained"
-            fullWidth
-            sx={{ height: "100%" }}
-            onClick={handleAdd}
-          >
+          <FormControl fullWidth size="small">
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={categoryId}
+              label="Category"
+              onChange={(e) => setCategoryId(e.target.value)}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {categories.map((c) => (
+                <MenuItem key={c.id} value={c.id}>
+                  {c.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid size={2}>
+          <Button variant="contained" fullWidth onClick={handleAdd}>
             Add Task
           </Button>
         </Grid>
-
       </Grid>
     </Box>
   );
