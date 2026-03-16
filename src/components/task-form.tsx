@@ -105,7 +105,7 @@ export default function TaskForm({ categories = [], defaultDueDate = "", onSucce
           </FormControl>
         </Grid>
         <Grid size={2}>
-          <Button variant="contained" fullWidth onClick={handleAdd}>
+          <Button variant="contained" className="!bg-black hover:!bg-gray-300 hover:!text-gray-900" fullWidth onClick={handleAdd}>
             Add Task
           </Button>
         </Grid>

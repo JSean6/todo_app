@@ -47,6 +47,7 @@ export default function CategoryForm({ onSuccess }: CategoryFormProps) {
       <Button
         variant="contained"
         size="small"
+        className="!bg-black hover:!bg-gray-300 hover:!text-gray-900"
         onClick={handleAdd}
         startIcon={<Plus className="h-4 w-4" />}
       >

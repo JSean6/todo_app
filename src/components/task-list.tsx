@@ -79,14 +79,14 @@ export default function TaskList({ tasks, onMutate, className }: TaskListProps) 
     <div className={cn("space-y-6", className)}>
       {grouped.length === 0 ? (
         <p className="text-muted-foreground text-center py-8">
-          No tasks for this date. Add one above.
+          No tasks for this date. Add one below.
         </p>
         // if there are no tasks, show a message
       ) : (
         // if there are tasks, show them in a list
         grouped.map(({ categoryName, tasks: categoryTasks }) => (
           <section key={categoryName}>
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground !text-orange-300">
               {categoryName}
             </h3>
             <div className="space-y-2">

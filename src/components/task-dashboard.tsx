@@ -70,18 +70,6 @@ export default function TaskDashboard() {
           />
         </section>
 
-        <section className="mb-6">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
-            <h2 className="text-lg font-semibold text-foreground">Add Task</h2>
-            <CategoryForm onSuccess={handleMutate} />
-          </div>
-          <TaskForm
-            categories={categories}
-            defaultDueDate={defaultDueDate}
-            onSuccess={handleMutate}
-          />
-        </section>
-
         <section>
           <h2 className="mb-4 text-lg font-semibold text-foreground">
             Your Tasks
@@ -92,6 +80,22 @@ export default function TaskDashboard() {
             <TaskList tasks={tasks} onMutate={handleMutate} />
           )}
         </section>
+        <br />
+
+        <section className="mb-6">
+          <div className="mb-4 flex flex-wrap items-center justify-between">
+            <h2 className="text-lg font-semibold text-foreground">Add Task</h2>
+            
+          </div>
+          <CategoryForm onSuccess={handleMutate} /> <br />
+          <TaskForm
+            categories={categories}
+            defaultDueDate={defaultDueDate}
+            onSuccess={handleMutate}
+          />
+        </section>
+
+
       </div>
     </div>
   );
