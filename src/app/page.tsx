@@ -7,7 +7,7 @@ import { Chip, Button, Container, Box, Typography } from "@mui/material";
 const categories = [
   "Exercise",
   "Read books",
-  "Meditate",
+  "Work",
   "Plan meals",
   "Water plants",
   "Study",
@@ -57,7 +57,7 @@ export default async function HomePage() {
           sx={{
             backgroundColor: "black",
             color: "white",
-            borderRadius: "50px", // fully rounded
+            borderRadius: "5px", 
             padding: "12px 28px",
             textTransform: "none",
             fontWeight: 600,
